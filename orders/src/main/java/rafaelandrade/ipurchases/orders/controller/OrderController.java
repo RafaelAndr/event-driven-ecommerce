@@ -1,13 +1,14 @@
 package rafaelandrade.ipurchases.orders.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import rafaelandrade.ipurchases.orders.dto.NewOrderDto;
+import rafaelandrade.ipurchases.orders.entity.ResponseError;
+import rafaelandrade.ipurchases.orders.exception.ValidateException;
 import rafaelandrade.ipurchases.orders.mapper.OrderMapper;
 import rafaelandrade.ipurchases.orders.service.OrderService;
 
@@ -21,8 +22,13 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<Object> create(@RequestBody NewOrderDto dto){
-        var order = mapper.map(dto);
-        var newOrder = service.createOrder(order);
-        return ResponseEntity.ok(newOrder.getCode());
+        try {
+            var order = mapper.map(dto);
+            var newOrder = service.createOrder(order);
+            return ResponseEntity.ok(newOrder.getCode());
+        } catch (ValidateException e) {
+            var error = new ResponseError("Validation Error", e.getField(), e.getMessage());
+            return ResponseEntity.badRequest().body(error);
+        }
     }
 }
