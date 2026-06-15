@@ -22,3 +22,10 @@ ipurchases:
         url: "http://localhost:8081/products"
       customers:
         url: "http://localhost:8082/customers"
+  config:
+    kafka:
+      server-url: 'http://localhost:29092'
+      topics:
+        pedidos-pagos: "ipurchases.pedidos-pagos"
+        pedidos-faturados: "ipurchases.pedidos-faturados"
+        pedidos-enviados: "ipurchases.pedidos-enviados"
