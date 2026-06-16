@@ -2,16 +2,15 @@ package rafaelandrade.ipurchases.orders.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import rafaelandrade.ipurchases.orders.dto.NewOrderDto;
 import rafaelandrade.ipurchases.orders.dto.NewPaymentDto;
 import rafaelandrade.ipurchases.orders.entity.ResponseError;
 import rafaelandrade.ipurchases.orders.exception.ItemNotFoundException;
 import rafaelandrade.ipurchases.orders.exception.ValidateException;
 import rafaelandrade.ipurchases.orders.mapper.OrderMapper;
+import rafaelandrade.ipurchases.orders.publisher.OrderDetailMapper;
+import rafaelandrade.ipurchases.orders.publisher.representation.OrderDetailRepresentation;
 import rafaelandrade.ipurchases.orders.service.OrderService;
 
 @RestController
@@ -21,6 +20,7 @@ public class OrderController {
 
     private final OrderService service;
     private final OrderMapper mapper;
+    private final OrderDetailMapper orderDetailMapper;
 
     @PostMapping
     public ResponseEntity<Object> create(@RequestBody NewOrderDto dto){
@@ -43,5 +43,13 @@ public class OrderController {
             var error = new ResponseError("Item not found", "orderCode", e.getMessage());
             return ResponseEntity.badRequest().body(error);
         }
+    }
+
+    @GetMapping("/{code}")
+    public ResponseEntity<OrderDetailRepresentation> getOrderDetails(@PathVariable("code") Long code){
+        return service.loadCompleteOrderData(code)
+                .map(orderDetailMapper::map)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

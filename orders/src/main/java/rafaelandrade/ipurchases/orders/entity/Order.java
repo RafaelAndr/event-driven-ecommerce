@@ -3,6 +3,7 @@ package rafaelandrade.ipurchases.orders.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import rafaelandrade.ipurchases.orders.client.representation.CustomerRepresentation;
 import rafaelandrade.ipurchases.orders.entity.enums.OrderStatus;
 
 import java.math.BigDecimal;
@@ -48,4 +49,7 @@ public class Order {
 
     @OneToMany(mappedBy = "order")
     private List<OrderItem> items;
+
+    @Transient
+    private CustomerRepresentation customer;
 }
