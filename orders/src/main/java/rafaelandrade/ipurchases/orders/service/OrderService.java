@@ -13,6 +13,7 @@ import rafaelandrade.ipurchases.orders.entity.PaymentData;
 import rafaelandrade.ipurchases.orders.entity.enums.OrderStatus;
 import rafaelandrade.ipurchases.orders.entity.enums.PaymentType;
 import rafaelandrade.ipurchases.orders.exception.ItemNotFoundException;
+import rafaelandrade.ipurchases.orders.publisher.PaymentPublisher;
 import rafaelandrade.ipurchases.orders.repository.OrderItemRepository;
 import rafaelandrade.ipurchases.orders.repository.OrderRepository;
 import rafaelandrade.ipurchases.orders.validator.OrderValidator;
@@ -30,6 +31,7 @@ public class OrderService {
     private final BankingServiceClient bankingServiceClient;
     private final CustomerClient customerClient;
     private final ProductClient productClient;
+    private final PaymentPublisher publisher;
 
     @Transactional
     public Order createOrder(Order order){
@@ -61,7 +63,7 @@ public class OrderService {
         Order order = orderFound.get();
 
         if (success) {
-            order.setStatus(OrderStatus.PAGO);
+            prepareAndPublish(order);
         } else {
             order.setStatus(OrderStatus.ERRO_PAGAMENTO);
             order.setObservations(observations);
@@ -91,6 +93,13 @@ public class OrderService {
         order.setPaymentKey(newPaymentKey);
 
         repository.save(order);
+    }
+
+    private void prepareAndPublish(Order order) {
+        order.setStatus(OrderStatus.PAGO);
+        loadCustomerData(order);
+        loadOrderItems(order);
+        publisher.publish(order);
     }
 
     public Optional<Order> loadCompleteOrderData(Long code){
