@@ -25,6 +25,7 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class OrderService {
+
     private final OrderRepository repository;
     private final OrderItemRepository orderItemRepository;
     private final OrderValidator validator;
@@ -128,4 +129,3 @@ public class OrderService {
         orderItem.setName(response.getBody().name());
     }
 }
-

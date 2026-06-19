@@ -33,5 +33,4 @@ public class PaymentPublisher {
             log.error("Unexpected error ", e);
         }
     }
-
 }
