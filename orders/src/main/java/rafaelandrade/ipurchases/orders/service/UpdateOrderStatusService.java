@@ -18,8 +18,12 @@ public class UpdateOrderStatusService {
         repository.findById(code).ifPresent(
                 order -> {
                     order.setStatus(status);
-                    order.setUrlNf(urlNf);
-                    order.setTrackingCode(trackingCode);
+                    if (urlNf != null){
+                        order.setUrlNf(urlNf);
+                    }
+                    if (trackingCode != null){
+                        order.setTrackingCode(trackingCode);
+                    }
                 }
         );
     }
