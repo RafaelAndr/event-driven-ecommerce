@@ -19,6 +19,4 @@ public class Product {
 
     @Column(name = "unit_value", nullable = false, precision = 16, scale = 2)
     private BigDecimal unitValue;
-
-
 }

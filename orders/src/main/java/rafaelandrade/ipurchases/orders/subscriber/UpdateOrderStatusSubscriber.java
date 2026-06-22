@@ -41,5 +41,4 @@ public class UpdateOrderStatusSubscriber {
             throw new RuntimeException(e);
         }
     }
-
 }

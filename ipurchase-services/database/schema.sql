@@ -17,7 +17,6 @@ create table products (
     unit_value decimal(16,2) not null
 )
 
-
 create table orders (
     code serial not null primary key,
     customer_code bigint not null,

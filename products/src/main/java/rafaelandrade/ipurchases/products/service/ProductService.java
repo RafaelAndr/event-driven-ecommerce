@@ -13,8 +13,8 @@ public class ProductService {
 
     private final ProductRepository repository;
 
-    public Product save(Product product){
-        return repository.save(product);
+    public void save(Product product){
+        repository.save(product);
     }
 
     public Optional<Product> getByCode(Long code){

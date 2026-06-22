@@ -20,7 +20,7 @@ public class InvoiceGeneratorService {
     private final BucketService bucketService;
     private final InvoicePublisher publisher;
 
-    public void generate(Order order) {
+    public void generateInvoice(Order order) {
         log.info("Gerando nota fiscal para o pedido {}", order.code());
 
         try {
